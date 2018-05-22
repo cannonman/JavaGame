@@ -1,7 +1,19 @@
+import org.jsfml.graphics.RenderWindow;
+import org.jsfml.graphics.Sprite;
+import org.jsfml.graphics.Text;
+import org.jsfml.graphics.Texture;
+import org.jsfml.system.Clock;
+import org.jsfml.system.Time;
+import org.jsfml.system.Vector2f;
+import org.jsfml.window.VideoMode;
+import org.jsfml.*;
+
 import javax.swing.JFrame;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Paths;
 
-public class Game extends JFrame{
+public class Game {
     enum GameState{MENU,OPTIONS,GAME,GAME_OVER,END,TARGETHIT};
     GameState state;
 
@@ -37,28 +49,26 @@ public class Game extends JFrame{
     RenderWindow window(VideoMode(800,600),"Archer the Game");
 
 
-    Game::Game()
-    {
-        state= END;
+    Game() {
+        state = END;
 
-        gracz = new Player (-50,200);
+        gracz = new Player(-50, 200);
 
-        luk = new Bow (84,340);
+        luk = new Bow(84, 340);
 
-        luk->reset();
+        luk -> reset();
 
         strzala = new Arrow(84, 340);
-        strzala->resetPosition();
+        strzala -> resetPosition();
 
-        obiekt = new Target (550,10);
+        obiekt = new Target(550, 10);
 
-        diff=0;
-        time=5;
+        diff = 0;
+        time = 5;
 
-        angle=0;
+        angle = 0;
 
-        if(!font.loadFromFile("arial.ttf"))
-        {
+        if (!font.loadFromFile("arial.ttf")) {
 
             //error
 
@@ -67,28 +77,23 @@ public class Game extends JFrame{
         state = MENU;
     }
 
-    Game::~Game()
-    {
-        //dtor
-    }
-
-    void Game::runGame()
+    void runGame()
     {
 
         while (state != END)
         {
             switch (state)
             {
-                case GameState::MENU:
+                case MENU:
                     menu();
                     break;
-                case GameState::GAME:
+                case GAME:
                     gameStart();
                     break;
-                case GameState::OPTIONS:
+                case OPTIONS:
                     options();
                     break;
-                case GameState::GAME_OVER:
+                case GAME_OVER:
                     gameOver();
                     break;
 
@@ -97,10 +102,9 @@ public class Game extends JFrame{
 
     }
 
-    void Game::gameStart()
-    {
+    void gameStart() throws IOException {
 
-        backgroundTexture.loadFromFile("jungle.png");
+        backgroundTexture.loadFromFile(Paths.get("jungle.png"));
         backgroundSprite.setTexture(backgroundTexture); //load texture
         score=0;
         switch (diff)
@@ -115,15 +119,15 @@ public class Game extends JFrame{
         }
 
         lives = 5;
-        while (state == GAME)
+        while (state == GameState.GAME)
         {
 
 
             mainClock.restart(); //start time measure
             Text title ("Archer the Game",font,30);
-            string points;
+            String points;
             points = "Punkty: ";
-            stringstream ss, sa;
+            Stringstream ss, sa;
             sa << lives;
             ss<< score;
             points+=ss.str();
@@ -475,7 +479,7 @@ public class Game extends JFrame{
 
     }
 
-    int Game::czas (clock_t t)
+    int czas (clock_t t)
     {
         return static_cast <int> (t) / CLOCKS_PER_SEC;
     }

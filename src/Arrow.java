@@ -1,3 +1,11 @@
+import org.jsfml.graphics.RectangleShape;
+import org.jsfml.graphics.Sprite;
+import org.jsfml.graphics.Texture;
+import org.jsfml.system.Vector2f;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+
 public class Arrow {
 
     static final int BEGIN_X = 84;
@@ -12,13 +20,12 @@ public class Arrow {
     Vector2f currVelo;
     float maxSpeed;
 
-    Arrow(float x, float y) : currVelo(0.f,0.f), maxSpeed(10.f)
-    {
+    Arrow(float x, float y) : Arrow(0.f,0.f); maxSpeed(10.f) throws IOException {
 
-        aTexture.loadFromFile("arrowDef.png");
+        aTexture.loadFromFile(Paths.get("arrowDef.png"));
         aSprite.setPosition(getBeginX(), getBeginY());
         aSprite.setTexture(aTexture);
-        Arrow::released=false;
+        released=false;
 
     }
 
@@ -35,12 +42,12 @@ public class Arrow {
 
     void changeAngleUp()
     {
-        aSprite.rotate(-2.5);
+        aSprite.rotate((float) -2.5);
     }
 
     void changeAngleDown()
     {
-        aSprite.rotate(2.5);
+        aSprite.rotate((float) 2.5);
     }
 
     void setAngle(float angle)
@@ -50,12 +57,12 @@ public class Arrow {
     void resetPosition()
     {
         aSprite.setPosition(getBeginX(), getBeginY());
-        Arrow::released=false;
+        released=false;
     }
 
     boolean ifReleased()
     {
-        return Arrow::released;
+        return released;
     }
 
     int getBeginX()

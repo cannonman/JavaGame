@@ -1,7 +1,11 @@
+import org.jsfml.graphics.Sprite;
+import org.jsfml.graphics.Texture;
+
 public class Bow {
     float bowAngle;
     Sprite bSprite;
     Texture bTexture;
+    int angle = 0;
 
     Sprite getSprite()
     {
@@ -10,13 +14,13 @@ public class Bow {
 
     void changeAngleUp()
     {
-        bSprite.rotate(-2.5);
+        bSprite.rotate((float) -2.5);
         angle-=2.5;
     }
 
     void changeAngleDown()
     {
-        bSprite.rotate(2.5);
+        bSprite.rotate((float) 2.5);
         angle+=2.5;
     }
 
