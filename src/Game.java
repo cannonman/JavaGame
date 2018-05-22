@@ -1,19 +1,23 @@
-import org.jsfml.graphics.RenderWindow;
-import org.jsfml.graphics.Sprite;
-import org.jsfml.graphics.Text;
-import org.jsfml.graphics.Texture;
+import org.jsfml.graphics.*;
 import org.jsfml.system.Clock;
 import org.jsfml.system.Time;
 import org.jsfml.system.Vector2f;
+import org.jsfml.window.Keyboard;
+import org.jsfml.window.Mouse;
 import org.jsfml.window.VideoMode;
 import org.jsfml.*;
 
 import javax.swing.JFrame;
 import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-public class Game {
+import static java.lang.Thread.sleep;
+import static java.lang.ref.SoftReference.clock;
+
+public class Game{
     enum GameState{MENU,OPTIONS,GAME,GAME_OVER,END,TARGETHIT};
     GameState state;
 
@@ -46,7 +50,7 @@ public class Game {
     int lives;
 
 
-    RenderWindow window(VideoMode(800,600),"Archer the Game");
+    RenderWindow window = new RenderWindow(new VideoMode(800,600),"Archer the Game");
 
 
     Game() {
@@ -222,26 +226,24 @@ public class Game {
 
             window.clear();
             window.draw(backgroundSprite);
-            window.draw(gracz->getSpirte());
-            window.draw(luk->getSprite());
-            window.draw(strzala->getSprite());
+            window.draw(gracz.getSpirte());
+            window.draw(luk.getSprite());
+            window.draw(strzala.getSprite());
 
-            obiekt->objMove(3);
+            obiekt.objMove(3);
             //      if (a==0)
             //    {
-            if (obiekt->aSprite.getPosition().y<600)
+            if (obiekt.aSprite.getPosition().y<600)
             {
 
-                obiekt->objMove(5-time);
+                obiekt.objMove(5-time);
 
                 a++;
 
             }
-            if (obiekt->aSprite.getPosition().y>=600)
+            if (obiekt.aSprite.getPosition().y>=600)
             {
-                cout << "przed" << endl;
-                obiekt->resetPosition();
-                cout << "po" << endl;
+                obiekt.resetPosition();
                 lives--;
                 if (lives==0)
                     state = GAME_OVER;
@@ -250,41 +252,41 @@ public class Game {
             //  }
             else if(czas(clock())%time!=0) {a=0;}
 
-            if (strzala->ifReleased()){
+            if (strzala.ifReleased()){
 
-                strzala->aSprite.move(vector);
+                strzala.aSprite.move(vector);
             }
 
 
-            window.draw(strzala->getSprite());
-            window.draw(obiekt->getSprite());
+            window.draw(strzala.getSprite());
+            window.draw(obiekt.getSprite());
             window.draw(title);
             window.draw(punkty);
             window.display();
 
             elapsed = mainClock.getElapsedTime(); //get time measured
-            sleep((sf::milliseconds(1000/FRAMERATE) - mainClock.getElapsedTime()));
+            sleep((milliseconds(1000/FRAMERATE) - mainClock.getElapsedTime()));
 
             if (lives==0)
-                state=GAME_OVER;
+                state= GameState.GAME_OVER;
 
         }
 
     }
 
-    void Game::gameOver(){
-        backgroundTexture.loadFromFile("jungle.png");
+    void gameOver() throws IOException {
+        backgroundTexture.loadFromFile(Paths.get("jungle.png"));
         backgroundSprite.setTexture(backgroundTexture); //load texture
         Text title;
         Text title2;
         Text powrot;
-        title.setStyle(Text::Bold);
+        title.setStyle(Bold);
         title.setPosition(300, 50);
         title.setString("Koniec Gry");
-        title.setFont(font);
+        title.setFont((ConstFont) font);
         title.setCharacterSize(40);
 
-        string points;
+        String points;
         stringstream ss;
         ss<< score;
         points+=ss.str();
@@ -302,7 +304,7 @@ public class Game {
         powrot.setFont(font);
         powrot.setCharacterSize(40);
 
-        while (state==GAME_OVER){
+        while (state== GameState.GAME_OVER){
 
             Vector2f mouse(Mouse::getPosition(window));
 
@@ -310,7 +312,7 @@ public class Game {
 
             while (window.pollEvent(event))
             {
-                if (event.type==Event::Closed || Event::KeyPressed && event.key.code == Keyboard::Escape)
+                if (event.type==Event.Closed || Event::KeyPressed && event.key.code == Keyboard::Escape)
                     state = END;
 
                 else if (powrot.getGlobalBounds().contains(mouse) && event.type == Event::MouseButtonReleased
@@ -322,8 +324,8 @@ public class Game {
 
 
             if(powrot.getGlobalBounds().contains(mouse))
-                powrot.setColor(Color::Red);
-            else powrot.setColor(Color::White);
+                powrot.setColor(Red);
+            else powrot.setColor(White);
 
             window.clear();
             window.draw(title);
@@ -335,11 +337,11 @@ public class Game {
         }
     }
 
-    void Game::options()
+    void options()
     {
 
-        Text title1 ("Archer The Game",font,80);
-        title1.setStyle(Text::Bold);
+        Text title1 = new Text("Archer The Game", (ConstFont) font,80);
+        title1.setStyle(Bold);
         Text title2 ("Options",font,60);
         title1.setPosition(800/2-title1.getGlobalBounds().width/2,20);
         title2.setPosition(800/2-title2.getGlobalBounds().width/2,120);
@@ -348,15 +350,15 @@ public class Game {
         Text poziom;
         Text powrot;
 
-        string str1[] = {"Easy","Normal","Hard"};
+        String str1[] = {"Easy","Normal","Hard"};
 
-        poziom.setFont(font);
+        poziom.setFont((ConstFont) font);
         poziom.setCharacterSize(65);
 
         poziom.setString(str1[0]);
         poziom.setPosition(800/2-poziom.getGlobalBounds().width/2,250);
 
-        powrot.setFont(font);
+        powrot.setFont((ConstFont) font);
         powrot.setCharacterSize(65);
 
         powrot.setString("Back");
@@ -419,7 +421,7 @@ public class Game {
 
 
         Text title ("Archer The Game",font,80);
-        title.setStyle(Text::Bold);
+        title.setStyle(Bold);
 
         // cout<<diff<<endl;
 
@@ -429,7 +431,7 @@ public class Game {
 
         Text tekst[ile];
 
-        string str[] = {"Play","Options","Exit"};
+        String str[] = {"Play","Options","Exit"};
 
         for (int i=0;i<ile;i++)
         {
