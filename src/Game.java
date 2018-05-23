@@ -36,6 +36,7 @@ public class Game{
     double x;
     boolean kolizja;
 
+    int time;
     Clock mainClock;
     Time elapsed;
 
@@ -162,7 +163,7 @@ public class Game{
 
 
 
-                if (event.type==Event::Closed || Event::KeyPressed && event.key.code == Keyboard::Escape)
+                if (event.type==Event::Closed || Event::KeyPressed && event.key.code == Keyboard.Escape)
                     state = END;
                 //game escape
 
