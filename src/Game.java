@@ -14,11 +14,19 @@ import java.awt.Font;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.cos;
+import static java.lang.StrictMath.sin;
 import static java.lang.Thread.sleep;
 import static java.lang.ref.SoftReference.clock;
+import static jdk.internal.jline.TerminalFactory.reset;
+import static jdk.nashorn.internal.runtime.regexp.joni.constants.AsmConstants.END;
+
 
 public class Game{
-    enum GameState{MENU,OPTIONS,GAME,GAME_OVER,END,TARGETHIT};
+    private static final int FRAMERATE = ;
+
+    public enum GameState{MENU,OPTIONS,GAME,GAME_OVER,END,TARGETHIT;};
     GameState state;
 
     Font font;
@@ -53,17 +61,17 @@ public class Game{
     RenderWindow window = new RenderWindow(new VideoMode(800,600),"Archer the Game");
 
 
-    Game() {
+    Game() throws IOException {
         state = END;
 
-        gracz = new Player(-50, 200);
+        Player gracz = new Player(-50, 200);
 
-        luk = new Bow(84, 340);
+        Bow luk = new Bow(84, 340);
 
-        luk -> reset();
+        luk.reset();
 
         strzala = new Arrow(84, 340);
-        strzala -> resetPosition();
+        strzala.resetPosition();
 
         obiekt = new Target(550, 10);
 
@@ -149,8 +157,8 @@ public class Game{
             while (window.pollEvent(event)) //wait for event
             {
 
-                vector.y = -ARROW_SPEED*(-sin((float)M_PI*(angle/180)));
-                vector.x =ARROW_SPEED*cos ((float)M_PI*abs(angle/180));
+                vector.y = -ARROW_SPEED*(-sin((float)PI*(angle/180)));
+                vector.x =ARROW_SPEED*cos ((float)PI*(angle/180));
 
 
 
@@ -162,10 +170,10 @@ public class Game{
                 {
                     if (angle-1.5>=MAX_ANGLE) {
                         angle -=1.5;
-                        luk->setAngle(angle);
-                        if (!strzala->ifReleased()){
+                        luk.setAngle(angle);
+                        if (!strzala.ifReleased()){
 
-                            strzala->setAngle(angle); //lift bow  and arrow up
+                            strzala.setAngle(angle); //lift bow  and arrow up
                         }
 
                     }
@@ -175,47 +183,47 @@ public class Game{
                 {
                     if (angle+1.5<=MIN_ANGLE) {
                         angle +=1.5;
-                        luk->setAngle(angle);
+                        luk.setAngle(angle);
 
-                        if (!strzala->ifReleased()){
-                            strzala->setAngle(angle); //lift bow and arrow down
+                        if (!strzala.ifReleased()){
+                            strzala.setAngle(angle); //lift bow and arrow down
 
                         }
                     }
                 }
 
-                if (Event::KeyPressed && event.key.code == Keyboard::Space)
+                if (Event.KeyPressed && event.key.code == Keyboard::Space)
                 {
 
-                    strzala->release();
+                    strzala.release();
 
 
 
-                    if (strzala->aSprite.getPosition().x < 0 || strzala->aSprite.getPosition().x > window.getSize().x) {
-                        delete strzala;
+                    if (strzala.aSprite.getPosition().x < 0 || strzala.aSprite.getPosition().x > window.getSize().x) {
+                        strzala = null;
                         strzala = new Arrow(84, 340);
-                        strzala->resetPosition();
-                        strzala->setAngle(angle);
-                        window.draw(strzala->getSprite());
+                        strzala.resetPosition();
+                        strzala.setAngle(angle);
+                        window.draw(strzala.getSprite());
                     }
-                    if (strzala->aSprite.getPosition().y < 0 || strzala->aSprite.getPosition().y > window.getSize().y) {
-                        delete strzala;
+                    if (strzala.aSprite.getPosition().y < 0 || strzala.aSprite.getPosition().y > window.getSize().y) {
+                        strzala = null;
                         strzala = new Arrow(84, 340);
-                        strzala->resetPosition();
-                        strzala->setAngle(angle);
-                        window.draw(strzala->getSprite());
+                        strzala.resetPosition();
+                        strzala.setAngle(angle);
+                        window.draw(strzala.getSprite());
                     }
 
                 }
 
             }
 
-            if (Collision::PixelPerfectTest(strzala->getSprite(),obiekt->getSprite()))
+            if (Collision::PixelPerfectTest(strzala.getSprite(),obiekt.getSprite()))
             {
                 score++;
 
-                strzala->resetPosition();
-                obiekt->resetPosition();
+                strzala.resetPosition();
+                obiekt.resetPosition();
 
                 if (score%3==0&&time>1)
                     time--;

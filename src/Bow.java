@@ -7,6 +7,10 @@ public class Bow {
     Texture bTexture;
     int angle = 0;
 
+    public Bow(int i, int i1) {
+
+    }
+
     Sprite getSprite()
     {
         return bSprite;
